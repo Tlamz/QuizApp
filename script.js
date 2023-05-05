@@ -10,7 +10,7 @@ const questions = [
     {
         question: 'How tall is Tlamz?',
         a: '6ft 5in',
-        b: '6ft',
+        b: '6ft 1in',
         c: '6ft 2in',
         d: '5ft 11in',
         correct: 'c',
@@ -41,7 +41,8 @@ const questions = [
     }
 ]
 
-let radios = document.querySelectorAll(".radioBtn");
+const quiz = document.getElementById("quiz");
+let answers = document.querySelectorAll(".answer");
 const questEL = document.getElementById('question')
 const aText = document.getElementById('aText');
 const bText = document.getElementById('bText');
@@ -51,6 +52,7 @@ const submitBtn = document.getElementById('submitBtn');
 
 
 let currentQuestion = 0;
+let score = 0;
 
 
 function loadQuestions() {
@@ -62,26 +64,48 @@ function loadQuestions() {
     cText.innerHTML = quizData.c;
     dText.innerHTML = quizData.d;
 }
+
 loadQuestions();
 
+
 function deselectAns() {
-    for (i = 0; i < radios.length; i++) {
-        console.log(radios[i])
-        radios[i].checked = false;
+    for (i = 0; i < answers.length; i++) {
+        // console.log(answers[i])
+        answers[i].checked = false;
+    }
+}
+
+function getAns() {
+    let answer = undefined;
+
+    for (i = 0; i < answers.length; i++) {
+        if (answers[i].checked) {
+            answer = answers[i].id;
+        }
     }
 
+    return answer;
 }
 
 
 
 submitBtn.addEventListener("click", () => {
-    currentQuestion++;
+    const answer = getAns()
 
-    if (currentQuestion < questions.length) {
-        deselectAns();
-        loadQuestions();
-    } else {
-        alert("You've finished, results loading")
+    // console.log(answer)
+    
+    if (answer) {
+        if (answer === questions[currentQuestion].correct) {
+            score++;
+        }
+        currentQuestion++;
+        if (currentQuestion < questions.length) {
+            deselectAns();
+            loadQuestions();
+        } else {
+            // console.log('yo');
+            quiz.innerHTML = `<h2>You got ${score} out of ${questions.length} questions correctly</h2>`
+        }
     }
 });
 
